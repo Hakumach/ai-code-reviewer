@@ -26,15 +26,18 @@ def analyze_code(code):
     if "import *" in code:
         feedback.append("Avoid using wildcard imports (import *), it can make code unclear.")
 
-    # Code quality
-    if "TODO" in code or "todo" in code:
-        feedback.append("Unresolved TODO found. Consider completing or removing it.")
-
     if "eval(" in code:
         feedback.append("Avoid using eval() as it can be unsafe.")
 
     if "exec(" in code:
         feedback.append("Avoid using exec() as it can be dangerous.")
+
+    # Code quality
+    if "TODO" in code or "todo" in code:
+        feedback.append("Unresolved TODO found. Consider completing or removing it.")
+
+    if "while True" in code:
+        feedback.append("Be cautious with infinite loops (while True).")
 
     # Clean result
     if not feedback:
