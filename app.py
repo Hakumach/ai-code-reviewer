@@ -14,6 +14,9 @@ def analyze_code(code):
     if "==" in code:
         feedback.append("Check for proper comparison logic.")
 
+    if "password" in code.lower():
+        feedback.append("Avoid hardcoding sensitive information like passwords.")
+
     if not feedback:
         feedback.append("Code looks clean and well-structured!")
 
