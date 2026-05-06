@@ -1,27 +1,24 @@
 # AI Code Reviewer
 
-## Overview
-This project is a simple AI-inspired tool that analyzes code and provides feedback on structure, readability, and potential issues. It simulates how AI systems evaluate and refine code quality.
+A web-based tool that analyzes code quality and provides a score with actionable feedback.
 
 ## Features
-- Analyze Python code input
-- Provide feedback on code structure and logic
-- Detect basic issues and suggest improvements
-- REST API built with Flask
+- Code scoring system (0–10)
+- Detects common issues (excessive print statements, missing comments, etc.)
+- Structured feedback output
+- Clean web interface built with Flask
 
-## Tech Stack
-- Python
-- Flask
+## Demo
 
-## How to Run
-1. Install dependencies:
-   pip install flask
-2. Run the app:
-   python app.py
-3. Open browser:
-   http://127.0.0.1:5000/
+Paste code into the input box and receive:
+- Code score
+- Feedback on improvements
 
-## Future Improvements
-- Integrate real AI (OpenAI or local models)
-- Improve code analysis logic
-- Add frontend interface
+## Example
+
+Input:
+```python
+x = 5
+print(x)
+print(x)
+print(x)
