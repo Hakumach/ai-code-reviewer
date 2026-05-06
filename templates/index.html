@@ -1,24 +1,29 @@
-<!-- test -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>AI Code Reviewer</title>
 </head>
 <body>
+
     <h1>AI Code Reviewer</h1>
 
-    <form method="POST" action="/analyze-web">
-        <textarea name="code" rows="10" cols="50" placeholder="Paste your code here..."></textarea><br><br>
-        <button type="submit">Analyze</button>
-    </form>
+    <form action="/" method="POST">
+    <textarea name="code" rows="12" cols="60" placeholder="Paste your code here..."></textarea><br><br>
+    <button type="submit">Analyze Code</button>
+</form>
 
-    {% if feedback %}
-        <h2>Feedback:</h2>
+    {% if score is not none %}
+        <h2>Code Score: {{ score }}/10</h2>
+    {% endif %}
+
+    {% if result %}
+        <h3>Feedback:</h3>
         <ul>
-            {% for item in feedback %}
+            {% for item in result %}
                 <li>{{ item }}</li>
             {% endfor %}
         </ul>
     {% endif %}
+
 </body>
 </html>

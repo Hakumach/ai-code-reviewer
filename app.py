@@ -1,85 +1,62 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
 def analyze_code(code):
     feedback = []
+    score = 10  # start perfect, deduct points
 
-    # Basic structure checks
-    if "print(" in code:
-        feedback.append("Avoid excessive print statements in production code.")
+    lines = code.split("\n")
 
-    if len(code.strip()) < 20:
-        feedback.append("Code is very short, consider adding more logic.")
+    # 🔴 Too many print statements
+    if code.count("print(") > 3:
+        feedback.append("Too many print statements — consider using logging")
+        score -= 2
 
-    # Logic checks
-    if "==" in code:
-        feedback.append("Ensure proper comparison logic is being used.")
+    # 🔴 Code too short
+    if len(lines) < 5:
+        feedback.append("Code is very short — may lack functionality")
+        score -= 1
 
-    if "=" in code and "==" not in code:
-        feedback.append("Check if assignment (=) is being used correctly instead of comparison (==).")
+    # 🔴 Long function
+    if len(lines) > 50:
+        feedback.append("Function is too long — consider splitting it")
+        score -= 2
 
-    # Security checks
-    if "password" in code.lower():
-        feedback.append("Avoid hardcoding sensitive information like passwords.")
+    # 🔴 Missing comments
+    if "#" not in code:
+        feedback.append("No comments found — consider documenting your code")
+        score -= 1
 
-    if "import *" in code:
-        feedback.append("Avoid using wildcard imports (import *), it can make code unclear.")
+    # 🔴 Bad variable names
+    bad_names = ["x", "y", "z", "data"]
+    if any(f"{name} =" in code for name in bad_names):
+        feedback.append("Use more descriptive variable names")
+        score -= 1
 
-    if "eval(" in code:
-        feedback.append("Avoid using eval() as it can be unsafe.")
+    # Keep score in range
+    score = max(score, 0)
 
-    if "exec(" in code:
-        feedback.append("Avoid using exec() as it can be dangerous.")
-
-    # Code quality
-    if "TODO" in code or "todo" in code:
-        feedback.append("Unresolved TODO found. Consider completing or removing it.")
-
-    if "while True" in code:
-        feedback.append("Be cautious with infinite loops (while True).")
-
-    # Clean result
     if not feedback:
-        feedback.append("Code looks clean and well-structured!")
+        feedback.append("Code looks clean and well-structured")
 
-    return feedback
-
-
-# API route (JSON)
-@app.route("/analyze", methods=["POST"])
-def analyze():
-    try:
-        data = request.get_json()
-        code = data.get("code", "")
-
-        if not code:
-            return jsonify({"error": "No code provided"}), 400
-
-        result = analyze_code(code)
-
-        return jsonify({
-            "input_length": len(code),
-            "feedback": result
-        })
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    return score, feedback
 
 
-# Web interface
-@app.route("/", methods=["GET"])
-def home():
-    return render_template("index.html")
+@app.route("/", methods=["GET", "POST"])
+def index():
+    result = None
+    score = None
 
+    if request.method == "POST":
+        code = request.form.get("code")
 
-@app.route("/analyze-web", methods=["POST"])
-def analyze_web():
-    code = request.form.get("code", "")
-    feedback = analyze_code(code)
-    return render_template("index.html", feedback=feedback)
+        if code:
+            score, feedback = analyze_code(code)
+            result = feedback
+
+    return render_template("index.html", result=result, score=score)
 
 
 if __name__ == "__main__":
     app.run(debug=True)
-# test change
