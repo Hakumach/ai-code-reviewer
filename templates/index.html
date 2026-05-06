@@ -1,0 +1,24 @@
+<!-- test -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Code Reviewer</title>
+</head>
+<body>
+    <h1>AI Code Reviewer</h1>
+
+    <form method="POST" action="/analyze-web">
+        <textarea name="code" rows="10" cols="50" placeholder="Paste your code here..."></textarea><br><br>
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if feedback %}
+        <h2>Feedback:</h2>
+        <ul>
+            {% for item in feedback %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
