@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -46,11 +46,7 @@ def analyze_code(code):
     return feedback
 
 
-@app.route("/", methods=["GET"])
-def home():
-    return "AI Code Reviewer is running!"
-
-
+# API route (JSON)
 @app.route("/analyze", methods=["POST"])
 def analyze():
     try:
@@ -71,5 +67,19 @@ def analyze():
         return jsonify({"error": str(e)}), 500
 
 
+# Web interface
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("index.html")
+
+
+@app.route("/analyze-web", methods=["POST"])
+def analyze_web():
+    code = request.form.get("code", "")
+    feedback = analyze_code(code)
+    return render_template("index.html", feedback=feedback)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+# test change
